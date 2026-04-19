@@ -1,32 +1,39 @@
-from sqlmodel import create_engine, SQLModel, Session
-from models import Account
+from sqlalchemy import create_engine, text
+from sqlalchemy.orm import Session
+from sqlmodel import select
 
-engine = create_engine("postgresql+psycopg://postgres:postgres@localhost:5432/iot_streaming", echo=True)
+from entities.base import Base
+from models.account import Account
+from repository.account_repository import AccountRepository
 
-
-
-SQLModel.metadata.create_all(engine)
-
-
-
-# first_account = Account(name="Konto Joasi")
-# second_account = Account(name="Konto Hubcia")
-
-
-
-# batch_size = 1000
+engine = create_engine("postgresql+psycopg://postgres:postgres@localhost:5432/postgres", echo=True)
+Base.metadata.create_all(engine)
+# with Session(engine) as session:
+#     repository = AccountRepository(session)
+#
+#     for i in range(10):
+#         repository.add_account(Account(f'Joasia_{i}'))
+#
+#     session.commit()
 #
 # with Session(engine) as session:
-#     buffer = []
+#     repository = AccountRepository(session)
+#     account = repository.get_account_by_id(1)
+#     print(account)
 #
-#     for i in range(1_000_000):
-#         buffer.append(Account(name=f"Konto no_{i}"))
 #
-#         if len(buffer) == batch_size:
-#             session.add_all(buffer)
-#             session.commit()
-#             buffer.clear()
 #
-#     if buffer:
-#         session.add_all(buffer)
-#         session.commit()
+#
+# with Session(engine) as session:
+#     repository = AccountRepository(session)
+#     repository.delete_by_id(12)
+#     session.commit()
+
+
+with Session(engine) as session:
+    session.execute(text("TRUNCATE TABLE accounts;"))
+    session.commit()
+
+
+
+print("Finito")
