@@ -1,9 +1,9 @@
 services:
 
-  telemetry-agent:
-    image: telemetry-agent:latest
-    environment:
-      HOUSEHOLD_ID: "household_id_{{.Task.Slot}}"
+#  telemetry-agent:
+#    image: telemetry-agent:latest
+#    environment:
+#      HOUSEHOLD_ID: "household_id_{{.Task.Slot}}"
 
   kafka-broker:
     image: apache/kafka:4.0.2
