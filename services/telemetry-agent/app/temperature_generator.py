@@ -19,8 +19,8 @@ def sensor_stream(sensor_id: str, temperature_unit: str = "C"):
         target = baseline + daily_cycle
         temp = 0.96 * prev_temp + 0.04 * target + noise
 
-        if spike_value <= 0.1 and rng.random() < 0.01:
-            spike_value = rng.uniform(4.0, 8.0)
+        if spike_value <= 0.1 and rng.random() < 0.0001:
+            spike_value = rng.uniform(4, 8)
 
         temp += spike_value
 
