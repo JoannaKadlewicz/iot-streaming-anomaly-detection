@@ -19,7 +19,7 @@ class HeartRateGenerator(BaseMetricGenerator):
         self.current_episode: str | None = None
 
     def next_event(self) -> dict[str, Any]:
-        now = datetime.utcnow()
+        now = datetime.now()
         rng = self.context.rng
 
         if rng.random() < 0.05:

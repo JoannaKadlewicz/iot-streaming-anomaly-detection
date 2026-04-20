@@ -14,7 +14,7 @@ class StepsGenerator(BaseMetricGenerator):
         self.interval_seconds = interval_seconds
 
     def next_event(self) -> dict[str, Any]:
-        now = datetime.utcnow()
+        now = datetime.now()
         rng = self.context.rng
 
         hour = now.hour
@@ -46,3 +46,5 @@ class StepsGenerator(BaseMetricGenerator):
             "interval_seconds": self.interval_seconds,
         })
         return event
+
+

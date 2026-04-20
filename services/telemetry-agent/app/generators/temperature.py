@@ -11,16 +11,10 @@ class BodyTemperatureGenerator(BaseMetricGenerator):
     metric_type = "temperature"
     TemperatureUnit = Literal["C", "F"]
 
-    def __init__(
-        self,
-        context: MetricContext,
-        unit: TemperatureUnit = "C",
-    ) -> None:
+    def __init__(self, context: MetricContext, unit: TemperatureUnit = "C", ) -> None:
         super().__init__(context)
-
         if unit not in {"C", "F"}:
             raise ValueError("unit must be 'C' or 'F'")
-
         self.unit = unit
         self.prev_base_temp_c = 36.6
         self.episode_offset_c = 0.0
@@ -62,9 +56,12 @@ class BodyTemperatureGenerator(BaseMetricGenerator):
             "value": round(value, 2),
             "unit": self.unit,
         })
+
         return event
 
     def _convert_from_celsius(self, temp_c: float) -> float:
         if self.unit == "C":
             return temp_c
         return (temp_c * 9 / 5) + 32
+
+
