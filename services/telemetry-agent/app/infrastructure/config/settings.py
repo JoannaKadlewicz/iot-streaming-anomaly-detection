@@ -21,6 +21,7 @@ class Settings(BaseSettings):
     # App
     account_id: int
     debug: bool
+    log_level: str
 
     model_config = SettingsConfigDict(
         env_file=ENV_FILE,

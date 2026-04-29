@@ -1,8 +1,12 @@
+import logging
+
 from sqlalchemy import select, inspect, func
 from sqlalchemy.orm import Session
 
 from domain.entities import Account
 from infrastructure.persistence.models import AccountModel
+
+logger = logging.getLogger(__name__)
 
 
 class AccountRepository:

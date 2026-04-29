@@ -9,7 +9,7 @@ from domain.generators.context import MetricContext
 
 
 class BodyTemperatureGenerator(BaseMetricGenerator):
-
+    generator_name = "Body Temperature Generator"
     metric_type = "temperature"
     temperature_units = ["C", "F"]
 

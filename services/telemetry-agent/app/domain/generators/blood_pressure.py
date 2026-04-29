@@ -7,6 +7,7 @@ from domain.generators.base import BaseMetricGenerator
 from domain.generators.context import MetricContext
 
 class BloodPressureGenerator(BaseMetricGenerator):
+    generator_name = "Blood Pressure Generator"
     metric_type = "blood_pressure"
     unit = "mmHg"
 

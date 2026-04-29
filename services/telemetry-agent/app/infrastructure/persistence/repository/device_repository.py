@@ -38,4 +38,5 @@ class DeviceRepository:
         return Device(name=device_model.name, account_id=device_model.account_id,
                       device_type=device_model.device_type,
                       capabilities=device_model.capabilities,
-                      created_at=device_model.created_at)
+                      created_at=device_model.created_at,
+                      device_id=device_model.id)

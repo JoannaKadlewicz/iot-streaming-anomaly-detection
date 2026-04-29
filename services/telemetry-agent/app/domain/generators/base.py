@@ -5,6 +5,8 @@ from uuid import uuid4
 from domain.generators.context import MetricContext
 
 class BaseMetricGenerator:
+
+    generator_name: str
     metric_type: str
     unit: str
 

@@ -1,4 +1,5 @@
 import json
+import logging
 from datetime import datetime, UTC
 from pathlib import Path
 
@@ -11,6 +12,7 @@ from infrastructure.persistence.models.base import BaseModel
 from infrastructure.persistence.repository.account_repository import AccountRepository
 from infrastructure.persistence.repository.device_repository import DeviceRepository
 
+logger = logging.getLogger(__name__)
 FIXTURES_DIR = Path(__file__).parent.parent / "fixtures/samples"
 
 
@@ -22,7 +24,7 @@ def load_json(filename: str) -> list[dict]:
 def drop_and_recreate_tables(engine) -> None:
     BaseModel.metadata.drop_all(engine)
     BaseModel.metadata.create_all(engine)
-    print("Tables created: ['accounts', 'devices']")
+    logger.info("Tables created: ['accounts', 'devices']")
 
 
 def seed_accounts(session: Session) -> dict[str, int]:
@@ -37,7 +39,7 @@ def seed_accounts(session: Session) -> dict[str, int]:
 
         saved = repo.get_account_by_name(account.name)
         account_map[account.name] = saved.account_id
-        print(f"  + Account: {account.name} (id={saved.account_id})")
+        logger.info("Account: %s (id=%s)", account.name, saved.account_id)
 
     return account_map
 
@@ -56,19 +58,18 @@ def seed_devices(session: Session, account_map: dict[str, int]) -> None:
             created_at=datetime.now(UTC),
         )
         repo.add_device(device)
-        print(f"  + Device: {device.name} [{item['name']}] → [{item['device_type']}]")
+        logger.info("  + Device: %s [%s] → [%s]", device.name, item['name'], item['device_type'])
 
 
 def load_samples(settings):
     engine = create_engine(settings.postgres_dsn, echo=False)
 
-    print("Creating tables...")
+    logger.info("Creating tables...")
     drop_and_recreate_tables(engine)
 
-    print("\n Seeding...")
+    logger.info("\n Seeding...")
     with Session(engine) as session:
         account_map = seed_accounts(session)
-        print()
         seed_devices(session, account_map)
         session.commit()
-        print(f"\n Seed finished.")
+        logger.info(f"\n Seed finished.")

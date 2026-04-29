@@ -8,6 +8,7 @@ from domain.generators.context import MetricContext
 
 
 class HeartRateGenerator(BaseMetricGenerator):
+    generator_name = "Heart Rate Generator"
     metric_type = "heart_rate"
     unit = "bpm"
 
