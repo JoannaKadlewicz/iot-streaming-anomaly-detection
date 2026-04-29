@@ -1,49 +1,16 @@
-import json
-
 import numpy as np
-from sqlmodel import SQLModel
-from sqlalchemy import create_engine
 from kafka import KafkaProducer
-from infrastructure.persistence.models import Base
 
-engine = create_engine("postgresql+psycopg://postgres:postgres@localhost:5432/postgres", echo=True)
-Base.metadata.create_all(engine)
+from builder import DeviceGeneratorFactory
+from infrastructure.config.settings import get_settings
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
 
-engine = create_engine("postgresql+psycopg://postgres:postgres@localhost:5432/iot_streaming", echo=True)
-
-
-
-from domain.generators.blood_pressure import BloodPressureGenerator
-from domain.generators import MetricContext
-from domain.generators.heart_rate import HeartRateGenerator
-from domain.generators.steps import StepsGenerator
-from domain.generators.temperature import BodyTemperatureGenerator
-SQLModel.metadata.create_all(engine)
-
-producer = KafkaProducer(
-    bootstrap_servers="localhost:9092",
-    value_serializer=lambda event: json.dumps(event).encode("utf-8")
-)
+from infrastructure.messaging import metric_producer, MetricProducer
+from infrastructure.persistence.repository import AccountRepository, DeviceRepository
+from seed.seed import load_samples
 
 
-# first_account = Account(name="Konto Joasi")
-# second_account = Account(name="Konto Hubcia")
-
-producer.send("events", b'myszka')
-producer.flush()
-
-
-
-
-
-
-
-
-
-
-#
-# import numpy as np
-#
 # from generators.blood_pressure import BloodPressureGenerator
 # from generators.context import MetricContext
 # from generators.heart_rate import HeartRateGenerator
@@ -65,18 +32,37 @@ producer.flush()
 #     print(temperature_generator.next_event())
 # #     sleep(2)
 #
-# print(temperature_generator.next_event())
-# print(heart_rate_generator.next_event())
-# print(steps_generator.next_event())
-# print(blood_pressure_generator.next_event())
+
+
+def main() -> None:
+    settings = get_settings()
+    engine = create_engine(settings.postgres_dsn, echo=False)
+    with Session(engine) as session:
+        account_repo = AccountRepository(session)
+        if not account_repo.has_accounts():
+            load_samples(settings)
+
+    factory = DeviceGeneratorFactory()
+    #
+    producer = MetricProducer(bootstrap_servers=session.kafka_bootstrap_server, topic=settings.kafka_topic)
+    with Session(engine) as session:
+        device_repo = DeviceRepository(session)
+        devices = device_repo.get_devices_by_account_id(settings.account_id)
+
+        for device in devices:
+            metric_generators = factory.build(settings.account_id, device)
+
+
+            while True:
+                for generator in metric_generators:
+                    metric = generator.next_event()
+
+                    producer.send_metric(metric = metric, key=device.device_id)
 
 
 
 
-ctx = MetricContext(
-    account_id="1",
-    device_id="101",
-    rng=np.random.default_rng()
-)
 
 
+if __name__ == "__main__":
+    main()

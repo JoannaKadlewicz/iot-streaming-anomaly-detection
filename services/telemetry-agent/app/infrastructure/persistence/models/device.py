@@ -31,4 +31,4 @@ class DeviceModel(BaseModel):
         SqlEnum(DeviceType, name="device_type", values_callable=lambda enum_cls: [e.value for e in enum_cls], ))
     capabilities: Mapped[list[Capability]] = mapped_column(
         ARRAY(SqlEnum(Capability, values_callable=lambda enum_cls: [e.value for e in enum_cls], )), default=list)
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now())
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)

@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import select, inspect, func
 from sqlalchemy.orm import Session
 
 from domain.entities import Account
@@ -29,6 +29,18 @@ class AccountRepository:
     def delete_by_id(self, account_id: int) -> None:
         account_to_delete = self.session.get(AccountModel, account_id)
         self.session.delete(account_to_delete)
+
+    def table_exists(self) -> bool:
+        inspector = inspect(self.session.bind)
+        return inspector.has_table("accounts")
+
+    def has_accounts(self) -> bool:
+        if not self.table_exists():
+            return False
+        count = self.session.execute(
+            select(func.count()).select_from(AccountModel)
+        ).scalar()
+        return count > 0
 
     def _from_model(self, account_model: AccountModel) -> Account:
         return Account(name=account_model.name, account_id=account_model.account_id,

@@ -1,5 +1,6 @@
+import random
 from datetime import datetime
-from typing import Literal, Any
+from typing import Any
 
 import numpy as np
 
@@ -8,14 +9,13 @@ from domain.generators.context import MetricContext
 
 
 class BodyTemperatureGenerator(BaseMetricGenerator):
-    metric_type = "temperature"
-    TemperatureUnit = Literal["C", "F"]
 
-    def __init__(self, context: MetricContext, unit: TemperatureUnit = "C", ) -> None:
+    metric_type = "temperature"
+    temperature_units = ["C", "F"]
+
+    def __init__(self, context: MetricContext) -> None:
         super().__init__(context)
-        if unit not in {"C", "F"}:
-            raise ValueError("unit must be 'C' or 'F'")
-        self.unit = unit
+        self.unit = random.choice(self.temperature_units)
         self.prev_base_temp_c = 36.6
         self.episode_offset_c = 0.0
         self.active_episode_steps = 0

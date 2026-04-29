@@ -16,6 +16,7 @@ class Settings(BaseSettings):
 
     # Kafka
     kafka_bootstrap_server: str
+    kafka_topic: str
 
     # App
     account_id: int

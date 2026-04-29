@@ -7,7 +7,6 @@ from sqlalchemy.orm import Session
 
 from domain.entities.account import Account
 from domain.entities.device import Device, DeviceType, Capability
-from infrastructure.config.settings import get_settings
 from infrastructure.persistence.models.base import BaseModel
 from infrastructure.persistence.repository.account_repository import AccountRepository
 from infrastructure.persistence.repository.device_repository import DeviceRepository
@@ -49,6 +48,7 @@ def seed_devices(session: Session, account_map: dict[str, int]) -> None:
 
     for item in data:
         device = Device(
+            device_id=None,
             name=item["name"],
             account_id=account_map[item["account_name"]],
             device_type=DeviceType(item["device_type"]),
@@ -59,8 +59,7 @@ def seed_devices(session: Session, account_map: dict[str, int]) -> None:
         print(f"  + Device: {device.name} [{item['name']}] → [{item['device_type']}]")
 
 
-def main() -> None:
-    settings = get_settings()
+def load_samples(settings):
     engine = create_engine(settings.postgres_dsn, echo=False)
 
     print("Creating tables...")
@@ -73,7 +72,3 @@ def main() -> None:
         seed_devices(session, account_map)
         session.commit()
         print(f"\n Seed finished.")
-
-
-if __name__ == "__main__":
-    main()

@@ -6,6 +6,7 @@ from infrastructure.persistence.models.device import DeviceType, Capability
 
 @dataclass
 class Device:
+    device_id: int | None
     name: str
     account_id: int
     device_type: DeviceType

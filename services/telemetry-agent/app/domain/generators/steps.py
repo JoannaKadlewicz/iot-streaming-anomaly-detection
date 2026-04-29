@@ -1,3 +1,4 @@
+import random
 from datetime import datetime
 from typing import Any
 
@@ -8,10 +9,11 @@ from domain.generators.context import MetricContext
 class StepsGenerator(BaseMetricGenerator):
     metric_type = "steps"
     unit = "count"
+    interval_options = [30, 60, 90]
 
-    def __init__(self, context: MetricContext, interval_seconds: int = 60) -> None:
+    def __init__(self, context: MetricContext) -> None:
         super().__init__(context)
-        self.interval_seconds = interval_seconds
+        self.interval_seconds = random.choice(self.interval_options)
 
     def next_event(self) -> dict[str, Any]:
         now = datetime.now()
@@ -46,5 +48,3 @@ class StepsGenerator(BaseMetricGenerator):
             "interval_seconds": self.interval_seconds,
         })
         return event
-
-
