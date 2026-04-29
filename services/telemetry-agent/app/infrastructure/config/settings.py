@@ -1,5 +1,8 @@
 from pydantic import computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from pathlib import Path
+
+ENV_FILE = Path(__file__).parent.parent.parent / ".env"
 
 
 class Settings(BaseSettings):
@@ -18,7 +21,7 @@ class Settings(BaseSettings):
     debug: bool
 
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=ENV_FILE,
         env_file_encoding="utf-8",
     )
 

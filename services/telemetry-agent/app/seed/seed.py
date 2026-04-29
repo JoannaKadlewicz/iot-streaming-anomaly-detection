@@ -12,7 +12,7 @@ from infrastructure.persistence.models.base import BaseModel
 from infrastructure.persistence.repository.account_repository import AccountRepository
 from infrastructure.persistence.repository.device_repository import DeviceRepository
 
-FIXTURES_DIR = Path(__file__).parent / "fixtures"
+FIXTURES_DIR = Path(__file__).parent / "samples/fixtures"
 
 
 def load_json(filename: str) -> list[dict]:
