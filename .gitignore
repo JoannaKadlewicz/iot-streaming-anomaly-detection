@@ -454,7 +454,7 @@ sql/hive-thriftserver/test_warehouses
 warehouse/
 spark-warehouse/
 
-# For R session data
+# For R session resources
 .RData
 .RHistory
 .Rhistory

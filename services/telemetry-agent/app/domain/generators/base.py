@@ -1,11 +1,12 @@
+from abc import abstractmethod, ABC
 from datetime import datetime
 from typing import Any
 from uuid import uuid4
 
 from domain.generators.context import MetricContext
 
-class BaseMetricGenerator:
 
+class BaseMetricGenerator(ABC):
     generator_name: str
     metric_type: str
     unit: str
@@ -13,6 +14,7 @@ class BaseMetricGenerator:
     def __init__(self, context: MetricContext) -> None:
         self.context = context
 
+    @abstractmethod
     def next_event(self) -> dict[str, Any]:
         raise NotImplementedError
 

@@ -13,7 +13,8 @@ from infrastructure.persistence.repository.account_repository import AccountRepo
 from infrastructure.persistence.repository.device_repository import DeviceRepository
 
 logger = logging.getLogger(__name__)
-FIXTURES_DIR = Path(__file__).parent.parent / "fixtures/samples"
+FIXTURES_DIR = Path(__file__).parent.parent.parent / "resources/samples"
+
 
 
 def load_json(filename: str) -> list[dict]:

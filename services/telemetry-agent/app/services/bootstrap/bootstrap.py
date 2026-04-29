@@ -9,7 +9,7 @@ def ensure_seeded(engine, settings) -> None:
     with Session(engine) as session:
         repo = AccountRepository(session)
         if not repo.has_accounts():
-            from seed.seed import load_samples
+            from infrastructure.seed.seed import load_samples
             load_samples(settings)
 
 
