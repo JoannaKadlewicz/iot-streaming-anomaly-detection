@@ -4,7 +4,7 @@ import numpy as np
 from sqlmodel import SQLModel
 from sqlalchemy import create_engine
 from kafka import KafkaProducer
-from infrastructure.persistence.entities import Base
+from infrastructure.persistence.models import Base
 
 engine = create_engine("postgresql+psycopg://postgres:postgres@localhost:5432/postgres", echo=True)
 Base.metadata.create_all(engine)
@@ -79,21 +79,4 @@ ctx = MetricContext(
     rng=np.random.default_rng()
 )
 
-batch_size = 10000
-counter = 0
-
-
-temperature_generator = BodyTemperatureGenerator(context=ctx, unit="C")
-heart_rate_generator = HeartRateGenerator(context=ctx)
-steps_generator = StepsGenerator(context=ctx)
-blood_pressure_generator = BloodPressureGenerator(context=ctx)
-while True:
-    producer.send("metrics2", temperature_generator.next_event())
-    producer.send("metrics2", heart_rate_generator.next_event())
-    producer.send("metrics2", steps_generator.next_event())
-    producer.send("metrics2", blood_pressure_generator.next_event())
-    counter += 1
-    if counter >= batch_size:
-        producer.flush()
-        counter = 0
 

@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select
-from infrastructure.persistence.entities import DeviceEntity
-from domain.models import Device
+from infrastructure.persistence.models import DeviceModel
+from domain.entities import Device
 
 
 class DeviceRepository:
@@ -9,11 +9,11 @@ class DeviceRepository:
         self.session = session
 
     def get_device_by_id(self, device_id: int) -> Device:
-        device_entity = self.session.get(DeviceEntity, device_id)
+        device_entity = self.session.get(DeviceModel, device_id)
         return self._from_entity(device_entity)
 
     def get_devices_by_account_id(self, account_id: int) -> list[Device]:
-        query = select(DeviceEntity).where(DeviceEntity.account_id == account_id)
+        query = select(DeviceModel).where(DeviceModel.account_id == account_id)
         device_entities = self.session.execute(query).scalars().all()
 
         list_of_devices = []
@@ -24,6 +24,6 @@ class DeviceRepository:
         # return [_from_entity(device_entity) for device_entity in device_entities]
 
 
-    def _from_entity(self, device_entity: DeviceEntity) -> Device:
+    def _from_entity(self, device_entity: DeviceModel) -> Device:
         return Device(name=device_entity.name, device_type=device_entity.device_type,
                       capabilities=device_entity.capabilities)

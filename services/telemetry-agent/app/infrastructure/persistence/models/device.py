@@ -5,7 +5,7 @@ from sqlalchemy import String, Enum as SqlEnum, ForeignKey, DateTime
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.orm import mapped_column, Mapped
 
-from infrastructure.persistence.entities.base import BaseEntity
+from infrastructure.persistence.models.base import BaseModel
 
 
 class DeviceType(str, Enum):
@@ -21,7 +21,7 @@ class Capability(str, Enum):
     BLOOD_PRESSURE = "blood_pressure"
 
 
-class DeviceEntity(BaseEntity):
+class DeviceModel(BaseModel):
     __tablename__ = "devices"
 
     id: Mapped[int] = mapped_column(primary_key=True)
