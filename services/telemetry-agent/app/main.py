@@ -1,32 +1,99 @@
-from sqlmodel import create_engine, SQLModel, Session
-from models import Account
+import json
+
+import numpy as np
+from sqlmodel import SQLModel
+from sqlalchemy import create_engine
+from kafka import KafkaProducer
+from domain.entities import Base
+
+engine = create_engine("postgresql+psycopg://postgres:postgres@localhost:5432/postgres", echo=True)
+Base.metadata.create_all(engine)
 
 engine = create_engine("postgresql+psycopg://postgres:postgres@localhost:5432/iot_streaming", echo=True)
 
 
 
+from domain.generators.blood_pressure import BloodPressureGenerator
+from domain.generators import MetricContext
+from domain.generators.heart_rate import HeartRateGenerator
+from domain.generators.steps import StepsGenerator
+from domain.generators.temperature import BodyTemperatureGenerator
 SQLModel.metadata.create_all(engine)
 
+producer = KafkaProducer(
+    bootstrap_servers="localhost:9092",
+    value_serializer=lambda event: json.dumps(event).encode("utf-8")
+)
 
 
 # first_account = Account(name="Konto Joasi")
 # second_account = Account(name="Konto Hubcia")
 
+producer.send("events", b'myszka')
+producer.flush()
 
 
-# batch_size = 1000
+
+
+
+
+
+
+
+
 #
-# with Session(engine) as session:
-#     buffer = []
+# import numpy as np
 #
-#     for i in range(1_000_000):
-#         buffer.append(Account(name=f"Konto no_{i}"))
+# from generators.blood_pressure import BloodPressureGenerator
+# from generators.context import MetricContext
+# from generators.heart_rate import HeartRateGenerator
+# from generators.steps import StepsGenerator
+# from generators.temperature import BodyTemperatureGenerator
 #
-#         if len(buffer) == batch_size:
-#             session.add_all(buffer)
-#             session.commit()
-#             buffer.clear()
+# ctx = MetricContext(
+#     account_id="acc-1",
+#     device_id="dev-1",
+#     rng=np.random.default_rng(),
+# )
 #
-#     if buffer:
-#         session.add_all(buffer)
-#         session.commit()
+# temperature_generator = BodyTemperatureGenerator(context=ctx, unit="C")
+# heart_rate_generator = HeartRateGenerator(context=ctx)
+# steps_generator = StepsGenerator(context=ctx)
+# blood_pressure_generator = BloodPressureGenerator(context=ctx)
+#
+# while True:
+#     print(temperature_generator.next_event())
+# #     sleep(2)
+#
+# print(temperature_generator.next_event())
+# print(heart_rate_generator.next_event())
+# print(steps_generator.next_event())
+# print(blood_pressure_generator.next_event())
+
+
+
+
+ctx = MetricContext(
+    account_id="1",
+    device_id="101",
+    rng=np.random.default_rng()
+)
+
+batch_size = 10000
+counter = 0
+
+
+temperature_generator = BodyTemperatureGenerator(context=ctx, unit="C")
+heart_rate_generator = HeartRateGenerator(context=ctx)
+steps_generator = StepsGenerator(context=ctx)
+blood_pressure_generator = BloodPressureGenerator(context=ctx)
+while True:
+    producer.send("metrics2", temperature_generator.next_event())
+    producer.send("metrics2", heart_rate_generator.next_event())
+    producer.send("metrics2", steps_generator.next_event())
+    producer.send("metrics2", blood_pressure_generator.next_event())
+    counter += 1
+    if counter >= batch_size:
+        producer.flush()
+        counter = 0
+
