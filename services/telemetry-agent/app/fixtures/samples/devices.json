@@ -1,0 +1,32 @@
+[
+  {
+    "name": "alice_watch_1",
+    "account_name": "alice_wearables",
+    "device_type": "smartwatch",
+    "capabilities": ["heart_rate", "steps", "temperature", "blood_pressure"]
+  },
+  {
+    "name": "alice_band_1",
+    "account_name": "alice_wearables",
+    "device_type": "smart band",
+    "capabilities": ["steps", "heart_rate"]
+  },
+  {
+    "name": "bob_watch_1",
+    "account_name": "bob_fitness",
+    "device_type": "smartwatch",
+    "capabilities": ["heart_rate", "steps", "blood_pressure"]
+  },
+  {
+    "name": "bob_ring_1",
+    "account_name": "bob_fitness",
+    "device_type": "smart ring",
+    "capabilities": ["heart_rate", "temperature"]
+  },
+  {
+    "name": "charlie_band_1",
+    "account_name": "charlie_health",
+    "device_type": "smart band",
+    "capabilities": ["steps", "temperature"]
+  }
+]

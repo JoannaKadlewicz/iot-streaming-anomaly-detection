@@ -1,0 +1,14 @@
+[
+  {
+    "name": "alice_wearables",
+    "is_active": true
+  },
+  {
+    "name": "bob_fitness",
+    "is_active": true
+  },
+  {
+    "name": "charlie_health",
+    "is_active": false
+  }
+]
