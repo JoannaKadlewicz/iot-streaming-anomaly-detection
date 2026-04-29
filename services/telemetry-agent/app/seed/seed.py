@@ -12,7 +12,7 @@ from infrastructure.persistence.models.base import BaseModel
 from infrastructure.persistence.repository.account_repository import AccountRepository
 from infrastructure.persistence.repository.device_repository import DeviceRepository
 
-FIXTURES_DIR = Path(__file__).parent / "samples/fixtures"
+FIXTURES_DIR = Path(__file__).parent.parent / "fixtures/samples"
 
 
 def load_json(filename: str) -> list[dict]:
@@ -28,11 +28,11 @@ def drop_and_recreate_tables(engine) -> None:
 
 def seed_accounts(session: Session) -> dict[str, int]:
     repo = AccountRepository(session)
-    data = load_json("/accounts.json")
+    data = load_json("accounts.json")
     account_map = {}
 
     for item in data:
-        account = Account(*item)
+        account = Account(account_id=None, name=item["name"], is_active=item["is_active"])
         repo.add_account(account)
         session.flush()
 
@@ -45,7 +45,7 @@ def seed_accounts(session: Session) -> dict[str, int]:
 
 def seed_devices(session: Session, account_map: dict[str, int]) -> None:
     repo = DeviceRepository(session)
-    data = load_json("/devices.json")
+    data = load_json("devices.json")
 
     for item in data:
         device = Device(

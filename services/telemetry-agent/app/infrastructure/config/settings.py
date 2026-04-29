@@ -1,8 +1,9 @@
-from pydantic import computed_field
-from pydantic_settings import BaseSettings, SettingsConfigDict
 from pathlib import Path
 
-ENV_FILE = Path(__file__).parent.parent.parent / ".env"
+from pydantic import computed_field
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+ENV_FILE = Path(__file__).resolve().parents[3] / ".env"
 
 
 class Settings(BaseSettings):
@@ -25,8 +26,8 @@ class Settings(BaseSettings):
         env_file_encoding="utf-8",
     )
 
-    @property
     @computed_field
+    @property
     def postgres_dsn(self) -> str:
         return (
             f"postgresql+psycopg://{self.db_username}:{self.db_password}"

@@ -24,7 +24,7 @@ class DeviceRepository:
             list_of_devices.append(self._from_model(device))
         return list_of_devices
 
-    def add_device(self, device: Device) -> Device:
+    def add_device(self, device: Device) -> None:
         model = DeviceModel(
             name=device.name,
             account_id=device.account_id,
@@ -32,7 +32,7 @@ class DeviceRepository:
             capabilities=device.capabilities,
             created_at=device.created_at,
         )
-        return self._from_model(model)
+        self.session.add(model)
 
     def _from_model(self, device_model: DeviceModel) -> Device:
         return Device(name=device_model.name, account_id=device_model.account_id,
