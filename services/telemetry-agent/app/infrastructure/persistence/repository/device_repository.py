@@ -1,9 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select
-from entities.account import AccountEntity
-from entities.device import DeviceEntity
-from models.device import Device
-from repository.account_repository import AccountRepository
+from domain.entities.device import DeviceEntity
+from infrastructure.persistence.models import Device
 
 
 class DeviceRepository:

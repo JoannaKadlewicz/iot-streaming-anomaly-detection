@@ -3,9 +3,8 @@ from typing import Any
 
 import numpy as np
 
-from generators.base import BaseMetricGenerator
-from generators.context import MetricContext
-
+from domain.generators.base import BaseMetricGenerator
+from domain.generators.context import MetricContext
 
 class BloodPressureGenerator(BaseMetricGenerator):
     metric_type = "blood_pressure"

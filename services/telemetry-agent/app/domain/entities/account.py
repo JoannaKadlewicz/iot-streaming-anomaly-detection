@@ -3,10 +3,10 @@ from datetime import datetime
 from sqlalchemy import String, DateTime
 from sqlalchemy.orm import mapped_column, Mapped
 
-from entities.base import Base
+from domain.entities.base import BaseEntity
 
 
-class AccountEntity(Base):
+class AccountEntity(BaseEntity):
     __tablename__ = "accounts"
 
     account_id: Mapped[int] = mapped_column(primary_key=True)

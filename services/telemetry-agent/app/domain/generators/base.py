@@ -2,8 +2,7 @@ from datetime import datetime
 from typing import Any
 from uuid import uuid4
 
-from generators.context import MetricContext
-
+from domain.generators.context import MetricContext
 
 class BaseMetricGenerator:
     metric_type: str

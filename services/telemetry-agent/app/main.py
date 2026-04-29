@@ -1,15 +1,10 @@
 import json
-from time import sleep
 
 import numpy as np
-from kafka import KafkaProducer
-from sqlmodel import create_engine, SQLModel, Session
-from models import Account
+from sqlmodel import SQLModel
 from sqlalchemy import create_engine
-from sqlalchemy.orm import Session
 from kafka import KafkaProducer
-from entities.base import Base
-from repository.device_repository import DeviceRepository
+from domain.entities import Base
 
 engine = create_engine("postgresql+psycopg://postgres:postgres@localhost:5432/postgres", echo=True)
 Base.metadata.create_all(engine)
@@ -18,11 +13,11 @@ engine = create_engine("postgresql+psycopg://postgres:postgres@localhost:5432/io
 
 
 
-from generators.blood_pressure import BloodPressureGenerator
-from generators.context import MetricContext
-from generators.heart_rate import HeartRateGenerator
-from generators.steps import StepsGenerator
-from generators.temperature import BodyTemperatureGenerator
+from domain.generators.blood_pressure import BloodPressureGenerator
+from domain.generators import MetricContext
+from domain.generators.heart_rate import HeartRateGenerator
+from domain.generators.steps import StepsGenerator
+from domain.generators.temperature import BodyTemperatureGenerator
 SQLModel.metadata.create_all(engine)
 
 producer = KafkaProducer(

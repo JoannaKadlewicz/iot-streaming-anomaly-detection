@@ -1,8 +1,8 @@
 from datetime import datetime
 from typing import Any
 
-from generators.base import BaseMetricGenerator
-from generators.context import MetricContext
+from domain.generators.base import BaseMetricGenerator
+from domain.generators.context import MetricContext
 
 
 class StepsGenerator(BaseMetricGenerator):
