@@ -1,1 +1,2 @@
-/services/telemetry-agent/database.ini
+/services/telemetry-agent/.env
+.idea
