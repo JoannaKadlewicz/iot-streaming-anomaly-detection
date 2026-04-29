@@ -5,7 +5,7 @@ from sqlalchemy import String, Enum as SqlEnum, ForeignKey, DateTime
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.orm import mapped_column, Mapped
 
-from domain.entities.base import BaseEntity
+from infrastructure.persistence.entities.base import BaseEntity
 
 
 class DeviceType(str, Enum):

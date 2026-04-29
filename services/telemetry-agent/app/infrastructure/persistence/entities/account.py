@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlalchemy import String, DateTime
 from sqlalchemy.orm import mapped_column, Mapped
 
-from domain.entities.base import BaseEntity
+from infrastructure.persistence.entities.base import BaseEntity
 
 
 class AccountEntity(BaseEntity):

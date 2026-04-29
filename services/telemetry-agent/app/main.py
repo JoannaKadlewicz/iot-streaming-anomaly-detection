@@ -4,7 +4,7 @@ import numpy as np
 from sqlmodel import SQLModel
 from sqlalchemy import create_engine
 from kafka import KafkaProducer
-from domain.entities import Base
+from infrastructure.persistence.entities import Base
 
 engine = create_engine("postgresql+psycopg://postgres:postgres@localhost:5432/postgres", echo=True)
 Base.metadata.create_all(engine)

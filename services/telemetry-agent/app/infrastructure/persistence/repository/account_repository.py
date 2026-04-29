@@ -1,8 +1,8 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from domain.entities.account import AccountEntity
-from infrastructure.persistence.models import Account
+from infrastructure.persistence.entities import AccountEntity
+from domain.models import Account
 
 
 class AccountRepository:

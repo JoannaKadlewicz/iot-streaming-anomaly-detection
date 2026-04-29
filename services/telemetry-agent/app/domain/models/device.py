@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from domain.entities.device import DeviceType, Capability
+from infrastructure.persistence.entities.device import DeviceType, Capability
 
 
 @dataclass
