@@ -45,7 +45,6 @@ class StepsGenerator(BaseMetricGenerator):
         event = self._base_event(now)
         event.update({
             "value": steps,
-            "unit": self.unit,
-            "interval_seconds": self.interval_seconds,
+            "unit": self.unit
         })
         return event

@@ -5,12 +5,12 @@ from domain.generators.base import BaseMetricGenerator
 import logging
 
 logger = logging.getLogger(__name__)
-EVENT_THRESHOLD = 50
+EVENT_THRESHOLD = 256
 
 def stream(
     producer: MetricProducer,
     generators: list[BaseMetricGenerator],
-    delay_interval: float = .5,
+    delay_interval: float = .125,
 ) -> None:
     event_counter = 0
     while True:

@@ -2,9 +2,9 @@ from datetime import datetime
 from typing import Any
 
 import numpy as np
-
 from domain.generators.base import BaseMetricGenerator
 from domain.generators.context import MetricContext
+
 
 class BloodPressureGenerator(BaseMetricGenerator):
     generator_name = "Blood Pressure Generator"
@@ -53,8 +53,7 @@ class BloodPressureGenerator(BaseMetricGenerator):
 
         event = self._base_event(now)
         event.update({
-            "systolic": systolic,
-            "diastolic": diastolic,
+            "value": f'{systolic:.0f}-{diastolic:.0f}',
             "unit": self.unit,
         })
         return event

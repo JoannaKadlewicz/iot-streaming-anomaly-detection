@@ -3,7 +3,7 @@ import logging
 from infrastructure.config.logging import configure_logging
 from infrastructure.config.settings import get_settings
 from infrastructure.spark import create_spark_session
-from jobs.silver.silver_transform import run_silver_transformation
+from jobs.silver.silver_pipeline import run_silver_transformation
 
 logger = logging.getLogger(__name__)
 
