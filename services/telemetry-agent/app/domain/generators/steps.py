@@ -9,7 +9,7 @@ from domain.generators.context import MetricContext
 class StepsGenerator(BaseMetricGenerator):
     generator_name = "Steps Generator"
     metric_type = "steps"
-    unit = "count"
+    unit = "count/min"
     interval_options = [30, 60, 90]
 
     def __init__(self, context: MetricContext) -> None:
