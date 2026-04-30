@@ -3,6 +3,7 @@ import logging
 from infrastructure.config.logging import configure_logging
 from infrastructure.config.settings import get_settings
 from infrastructure.spark import create_spark_session
+from jobs.gold.temperature.hourly_temperature_summary_pipeline import run_hourly_temperature_summary
 
 logger = logging.getLogger(__name__)
 
@@ -12,15 +13,12 @@ def main() -> None:
 
     spark = create_spark_session(settings)
 
-    logger.info("Starting silver layer")
+    logger.info("[GOLD] Starting hourly temperature summary...")
 
-    silver_df = (
-        spark.read
-        .format("delta")
-        .load(settings.silver_path_for("blood_pressure"))
-    )
+    run_hourly_temperature_summary(spark, settings)
 
-    silver_df.show(50, truncate=False)
+    # spark.read.format("delta").load(f'{settings.delta_base_path}/gold/temperature_hourly_summary').filter(col("device_id") == 2).show(1000, truncate=False)
+
 
 if __name__ == "__main__":
     main()
