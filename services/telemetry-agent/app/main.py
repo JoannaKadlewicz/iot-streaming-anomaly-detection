@@ -1,12 +1,12 @@
 from sqlalchemy import create_engine
 import logging
 
+from infrastructure.messaging import MetricProducer
 from services.bootstrap.bootstrap import ensure_seeded, fetch_devices
 from services.factory.generator_factory import DeviceGeneratorFactory
 from services.producer.streaming import stream
 from infrastructure.config.logging import configure_logging
 from infrastructure.config.settings import get_settings
-from app.infrastructure.messaging import MetricProducer
 
 logger = logging.getLogger(__name__)
 

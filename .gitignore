@@ -1,5 +1,5 @@
 # Project dependant exclusions
-/services/telemetry-agent/.env
+/services/**/.env
 
 # User-specific stuff
 .idea/**/workspace.xml

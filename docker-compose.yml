@@ -1,7 +1,7 @@
 services:
 
-#  telemetry-agent:
-#    image: telemetry-agent:latest
+#  app:
+#    image: app:latest
 #    environment:
 #      HOUSEHOLD_ID: "household_id_{{.Task.Slot}}"
 
@@ -36,3 +36,5 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+    volumes:
+      - /tmp/db-data/:/var/lib/postgresql/data/
