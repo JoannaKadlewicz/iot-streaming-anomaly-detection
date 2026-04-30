@@ -4,13 +4,20 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 ENV_FILE = Path(__file__).resolve().parents[3] / ".env"
 
+print(ENV_FILE)
+
 
 class Settings(BaseSettings):
-
     # Spark
     app_name: str
     master_url: str
-    checkpoint_url: str
+    base_path: str
+    checkpoint_base_path: str
+    delta_base_path: str
+
+    # Kafka
+    kafka_bootstrap_server: str
+    kafka_topic: str
 
     # App
     log_level: str
