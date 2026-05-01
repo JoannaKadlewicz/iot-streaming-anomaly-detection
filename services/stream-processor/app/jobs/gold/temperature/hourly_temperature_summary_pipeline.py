@@ -4,6 +4,7 @@ from pyspark.sql import SparkSession
 
 from domain.transformations.gold.temperature.hourly_summary import transform
 from infrastructure.config import Settings
+from infrastructure.config.layers import Layer
 
 logger = logging.getLogger(__name__)
 
@@ -12,7 +13,7 @@ def run_hourly_temperature_summary(spark: SparkSession, settings: Settings) -> N
     df_silver = (
         spark.readStream
         .format("delta")
-        .load(settings.silver_path_for("temperature"))
+        .load(settings.delta_path(Layer.SILVER, "temperature"))
     )
 
     df_gold = (
@@ -26,10 +27,9 @@ def run_hourly_temperature_summary(spark: SparkSession, settings: Settings) -> N
         .queryName("gold_temperature_hourly")
         .format("delta")
         .outputMode("append")
-        .option("checkpointLocation", settings.checkpoint_path("gold"))
+        .option("checkpointLocation", settings.checkpoint_path(Layer.GOLD, "temperature_hourly_summary"))
         .trigger(availableNow=True)
-        .start(f'{settings.delta_base_path}/gold/temperature_hourly_summary')
+        .start(settings.delta_path(Layer.GOLD, "temperature_hourly_summary"))
     )
 
     query.awaitTermination()
-    logger.info("[Gold] Hourly temperature summary finished.")

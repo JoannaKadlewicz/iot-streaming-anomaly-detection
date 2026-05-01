@@ -1,7 +1,8 @@
 from pathlib import Path
 
-from pydantic import computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+from infrastructure.config.layers import Layer
 
 
 class Settings(BaseSettings):
@@ -19,18 +20,11 @@ class Settings(BaseSettings):
     # App
     log_level: str
 
-    @computed_field
-    @property
-    def bronze_delta_path(self) -> str:
-        return f"{self.delta_base_path}/bronze"
+    def checkpoint_path(self, layer: Layer, checkpoint_name: str) -> str:
+        return f"{self.checkpoint_base_path}/{layer}/{checkpoint_name}"
 
-    @computed_field
-    @property
-    def silver_checkpoint_path(self) -> str:
-        return f"{self.delta_base_path}/silver/checkpoint"
-
-    def silver_path_for(self, metric_type: str) -> str:
-        return f"{self.delta_base_path}/silver/{metric_type}"
+    def delta_path(self, layer: Layer, table_name: str) -> str:
+        return f"{self.delta_base_path}/{layer}/{table_name}"
 
     model_config = SettingsConfigDict(
         env_file=Path(__file__).resolve().parents[3] / ".env",
