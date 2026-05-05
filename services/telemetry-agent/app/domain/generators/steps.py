@@ -23,6 +23,7 @@ class StepsGenerator(BaseMetricGenerator):
         super().__init__(context)
 
     def next_event(self, at: datetime | None = None) -> dict[str, Any]:
+        now = at or datetime.now()
         rng = self.context.rng
         activity = self.context.activity.level
 
@@ -35,7 +36,7 @@ class StepsGenerator(BaseMetricGenerator):
             lam = steps_per_min * (self.interval_seconds / 60.0)
             steps = int(rng.poisson(lam))
 
-        event = self._base_event(at)
+        event = self._base_event(now)
         event.update({
             "value": steps,
             "unit": self.unit,

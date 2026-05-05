@@ -38,10 +38,11 @@ class BloodPressureGenerator(BaseMetricGenerator):
         self.current_episode: str | None = None
 
     def next_event(self, at: datetime | None = None) -> dict[str, Any]:
+        now = at or datetime.now()
         rng = self.context.rng
         activity = self.context.activity.level
 
-        second_of_day = at.hour * 3600 + at.minute * 60 + at.second
+        second_of_day = now.hour * 3600 + now.minute * 60 + now.second
         circadian = 4 * np.sin(2 * np.pi * second_of_day / 86400)
 
         sys_low, sys_high = _ACTIVITY_SYS_BOOST[activity]
@@ -73,7 +74,7 @@ class BloodPressureGenerator(BaseMetricGenerator):
         self.prev_sys = float(systolic)
         self.prev_dia = float(diastolic)
 
-        event = self._base_event(at)
+        event = self._base_event(now)
         event.update({
             "value": f"{systolic:.0f}-{diastolic:.0f}",
             "unit": self.unit,

@@ -29,6 +29,7 @@ class HeartRateGenerator(BaseMetricGenerator):
         self.current_episode: str | None = None
 
     def next_event(self, at: datetime | None = None) -> dict[str, Any]:
+        now = at or datetime.now()
         rng = self.context.rng
         activity = self.context.activity.level
 
@@ -54,7 +55,7 @@ class HeartRateGenerator(BaseMetricGenerator):
         hr = int(np.clip(round(hr), 35, 210))
         self.prev_hr = float(hr)
 
-        event = self._base_event(at)
+        event = self._base_event(now)
         event.update({
             "value": hr,
             "unit": self.unit,
