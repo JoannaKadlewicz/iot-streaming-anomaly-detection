@@ -5,12 +5,12 @@ from domain.generators.base import BaseMetricGenerator
 import logging
 
 logger = logging.getLogger(__name__)
-EVENT_THRESHOLD = 256
+EVENT_THRESHOLD = 1024
 
 def stream(
     producer: MetricProducer,
     generators: list[BaseMetricGenerator],
-    delay_interval: float = .125,
+    delay_interval: float = 1,
 ) -> None:
     event_counter = 0
     while True:
@@ -22,6 +22,6 @@ def stream(
         if event_counter >= EVENT_THRESHOLD:
             logger.info("Flushing %s metrics to the queue", EVENT_THRESHOLD)
             producer.flush()
+            sleep(delay_interval)
             event_counter = 0
 
-        sleep(delay_interval)

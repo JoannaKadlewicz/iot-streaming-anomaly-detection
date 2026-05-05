@@ -3,7 +3,7 @@ import logging
 from infrastructure.config.logging import configure_logging
 from infrastructure.config.settings import get_settings
 from infrastructure.spark import create_spark_session
-from jobs.bronze.bronze_pipeline import run_bronze_ingestion
+from jobs.bronze.metric_ingestion.bronze_pipeline import run_bronze_ingestion
 
 logger = logging.getLogger(__name__)
 

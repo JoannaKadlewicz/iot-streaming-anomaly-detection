@@ -5,8 +5,8 @@ from infrastructure.config import Settings
 
 def create_spark_session(settings: Settings) -> SparkSession:
     return (SparkSession.builder
-            .appName(settings.app_name)
             .master(settings.master_url)
+            .appName(settings.app_name)
             .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
             .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
             .config("spark.jars.packages",

@@ -1,9 +1,19 @@
 services:
 
-#  app:
-#    image: app:latest
+#  telemetry_agent:
+#    image: telemetry-agent:latest
+#    deploy:
+#      replicas: 1
+#
 #    environment:
-#      HOUSEHOLD_ID: "household_id_{{.Task.Slot}}"
+#      KAFKA_BOOTSTRAP_SERVER: localhost:9092
+#      KAFKA_TOPIC: metrics
+#
+#      DEBUG: False
+#      LOG_LEVEL: INFO
+#
+#    depends_on:
+#      - kafka-broker
 
   kafka-broker:
     image: apache/kafka:4.0.2
@@ -27,14 +37,3 @@ services:
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
       CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
-
-  postgres:
-    image: 'postgres:15.17'
-    container_name: postgres
-    ports:
-      - 5432:5432
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-    volumes:
-      - /tmp/db-data/:/var/lib/postgresql/data/
