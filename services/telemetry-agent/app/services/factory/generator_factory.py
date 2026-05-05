@@ -1,9 +1,10 @@
 import numpy as np
 
-from domain.entities import Device
 from domain.generators import BaseMetricGenerator, MetricContext, StepsGenerator, BodyTemperatureGenerator, \
     HeartRateGenerator, BloodPressureGenerator
-from infrastructure.persistence.models.device import Capability
+
+from domain.model.device import Capability
+from domain.model import Device
 
 
 class DeviceGeneratorFactory:

@@ -1,19 +1,9 @@
-from sqlalchemy.orm import Session
+import json
 
-from domain.entities import Device
-from infrastructure.persistence.repository.account_repository import AccountRepository
-from infrastructure.persistence.repository.device_repository import DeviceRepository
+from domain.model import Device
 
 
-def ensure_seeded(engine, settings) -> None:
-    with Session(engine) as session:
-        repo = AccountRepository(session)
-        if not repo.has_accounts():
-            from infrastructure.seed.seed import load_samples
-            load_samples(settings)
-
-
-def fetch_devices(engine, account_id: int) -> list[Device]:
-    with Session(engine) as session:
-        repo = DeviceRepository(session)
-        return repo.get_devices_by_account_id(account_id)
+def fetch_devices(file_source: str) -> list[Device]:
+    with open(file_source) as f:
+        devices = json.load(f)
+        return [Device(**device) for device in devices]

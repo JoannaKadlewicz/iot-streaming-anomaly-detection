@@ -1,32 +1,42 @@
 [
   {
+    "device_id": 1,
     "name": "alice_watch_1",
-    "account_name": "alice_wearables",
+    "account_id": 1,
     "device_type": "smartwatch",
-    "capabilities": ["heart_rate", "steps", "temperature", "blood_pressure"]
+    "capabilities": ["heart_rate", "steps", "temperature", "blood_pressure"],
+    "created_at": "2026-05-01T08:00:00"
   },
   {
+    "device_id": 2,
     "name": "alice_band_1",
-    "account_name": "alice_wearables",
+    "account_id": 1,
     "device_type": "smart band",
-    "capabilities": ["steps", "heart_rate"]
+    "capabilities": ["steps", "heart_rate"],
+    "created_at": "2026-05-01T08:05:00"
   },
   {
+    "device_id": 3,
     "name": "bob_watch_1",
-    "account_name": "bob_fitness",
+    "account_id": 2,
     "device_type": "smartwatch",
-    "capabilities": ["heart_rate", "steps", "blood_pressure"]
+    "capabilities": ["heart_rate", "steps", "blood_pressure"],
+    "created_at": "2026-05-01T08:10:00"
   },
   {
+    "device_id": 4,
     "name": "bob_ring_1",
-    "account_name": "bob_fitness",
+    "account_id": 2,
     "device_type": "smart ring",
-    "capabilities": ["heart_rate", "temperature"]
+    "capabilities": ["heart_rate", "temperature"],
+    "created_at": "2026-05-01T08:15:00"
   },
   {
+    "device_id": 5,
     "name": "charlie_band_1",
-    "account_name": "charlie_health",
+    "account_id": 3,
     "device_type": "smart band",
-    "capabilities": ["steps", "temperature"]
+    "capabilities": ["steps", "temperature"],
+    "created_at": "2026-05-01T08:20:00"
   }
 ]
