@@ -10,13 +10,15 @@ class BaseMetricGenerator(ABC):
     generator_name: str
     metric_type: str
     unit: str
+    interval_seconds: int = 60
 
     def __init__(self, context: MetricContext) -> None:
         self.context = context
 
     @abstractmethod
-    def next_event(self) -> dict[str, Any]:
+    def next_event(self, at: datetime | None = None) -> dict[str, Any]:
         raise NotImplementedError
+
 
     def _base_event(self, event_ts: datetime) -> dict[str, Any]:
         return {

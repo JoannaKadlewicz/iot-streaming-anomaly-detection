@@ -12,6 +12,7 @@ class BodyTemperatureGenerator(BaseMetricGenerator):
     generator_name = "Body Temperature Generator"
     metric_type = "temperature"
     temperature_units = ["C", "F"]
+    interval_seconds = 300
 
     def __init__(self, context: MetricContext) -> None:
         super().__init__(context)
@@ -20,20 +21,22 @@ class BodyTemperatureGenerator(BaseMetricGenerator):
         self.episode_offset_c = 0.0
         self.active_episode_steps = 0
 
-    def next_event(self) -> dict[str, Any]:
-        now = datetime.now()
+    def next_event(self, at: datetime | None = None) -> dict[str, Any]:
         rng = self.context.rng
 
-        second_of_day = now.hour * 3600 + now.minute * 60 + now.second
+        second_of_day = at.hour * 3600 + at.minute * 60 + at.second
         circadian_cycle_c = 0.35 * np.sin(2 * np.pi * second_of_day / 86400 - np.pi / 2)
         noise_c = rng.normal(0, 0.03)
         target_base_c = 36.6 + circadian_cycle_c
 
         base_temp_c = 0.90 * self.prev_base_temp_c + 0.10 * target_base_c + noise_c
 
-        if self.active_episode_steps == 0 and rng.random() < 0.1:
+        if self.active_episode_steps == 0 and rng.random() < 0.001:
             self.active_episode_steps = int(rng.integers(8, 20))
-            self.episode_offset_c = float(rng.uniform(1.2, 2.4))
+            if rng.random() < 0.85:
+                self.episode_offset_c = float(rng.uniform(1.2, 2.8))
+            else:
+                self.episode_offset_c = float(rng.uniform(-1.5, -0.8))
 
         if self.active_episode_steps > 0:
             self.active_episode_steps -= 1
@@ -44,24 +47,17 @@ class BodyTemperatureGenerator(BaseMetricGenerator):
         else:
             current_offset_c = 0.0
 
-        observed_temp_c = base_temp_c + current_offset_c
-        observed_temp_c = float(np.clip(observed_temp_c, 35.8, 40.5))
-
+        observed_temp_c = float(np.clip(base_temp_c + current_offset_c, 35.0, 41.5))
         self.prev_base_temp_c = base_temp_c
 
-        value = self._convert_from_celsius(observed_temp_c)
-
-        event = self._base_event(now)
+        event = self._base_event(at)
         event.update({
-            "value": round(value, 2),
+            "value": round(self._convert_from_celsius(observed_temp_c), 2),
             "unit": self.unit,
         })
-
         return event
 
     def _convert_from_celsius(self, temp_c: float) -> float:
         if self.unit == "C":
             return temp_c
         return (temp_c * 9 / 5) + 32
-
-

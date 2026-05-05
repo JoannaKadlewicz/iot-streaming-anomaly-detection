@@ -1,10 +1,12 @@
 import logging
+from datetime import datetime, timedelta
 
 from infrastructure.config.logging import configure_logging
 from infrastructure.config.settings import get_settings
 from infrastructure.messaging import MetricProducer
 from services.bootstrap.bootstrap import fetch_devices
 from services.factory.generator_factory import DeviceGeneratorFactory
+from services.producer.backfill import generate_backfill
 from services.producer.streaming import stream
 
 logger = logging.getLogger(__name__)
@@ -14,9 +16,9 @@ def main() -> None:
     settings = get_settings()
     configure_logging(level=settings.log_level)
 
-    devices = fetch_devices(settings.file_source)
+    devices = fetch_devices(settings.device_source)
     if not devices:
-        raise Exception(f"No devices found in source_path: {settings.file_source}")
+        raise Exception(f"No devices found in source_path: {settings.device_source}")
 
     factory = DeviceGeneratorFactory()
     all_generators = []
@@ -28,6 +30,11 @@ def main() -> None:
         bootstrap_servers=settings.kafka_bootstrap_server,
         topic=settings.kafka_topic,
     )
+
+    if settings.with_backfill:
+        evt_cnt = generate_backfill(generators=all_generators, start=datetime(2026, 1, 1),
+                                    end=datetime.now() - timedelta(days=1), metric_producer=producer)
+        print(f"Backill finished. %d events sent to queue.", evt_cnt)
 
     logger.info("Streaming for %d generators and for %d devices just started...", len(all_generators), len(devices))
 

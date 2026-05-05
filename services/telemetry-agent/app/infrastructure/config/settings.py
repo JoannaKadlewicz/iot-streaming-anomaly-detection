@@ -13,7 +13,8 @@ class Settings(BaseSettings):
     # App
     echo: bool
     log_level: str
-    file_source: str
+    device_source: str
+    with_backfill: bool
 
     model_config = SettingsConfigDict(
         env_file=ENV_FILE,
