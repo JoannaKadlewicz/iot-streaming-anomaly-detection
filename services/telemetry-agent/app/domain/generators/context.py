@@ -11,14 +11,18 @@ class ActivityLevel(Enum):
     RUNNING = "running"
     WORKOUT = "workout"
 
+class ActivityProfile(Enum):
+    SEDENTARY = "sedentary"
+    NORMAL = "normal"
+    ACTIVE = "active"
 
 @dataclass
 class UserActivityState:
     level: ActivityLevel = ActivityLevel.RESTING
-    steps_remaining_in_burst: int = 0
+    profile: ActivityProfile = ActivityProfile.SEDENTARY
 
     def transition(self, rng: np.random.Generator, hour: int) -> None:
-        weights = _activity_weights_by_hour(hour)
+        weights = _activity_weights_by_hour(hour, self.profile)
         self.level = rng.choice(list(ActivityLevel), p=weights)
 
 
@@ -30,20 +34,44 @@ class MetricContext:
     activity: UserActivityState = field(default_factory=UserActivityState)
 
 
-def _activity_weights_by_hour(hour: int) -> list[float]:
-    if 0 <= hour < 6:
-        return [0.95, 0.04, 0.01, 0.00, 0.00]
-    elif 6 <= hour < 8:      # MORNING
-        return [0.05, 0.68, 0.20, 0.04, 0.03]
-    elif 8 <= hour < 12:     # WORK
-        return [0.00, 0.83, 0.12, 0.01, 0.04]
-    elif 12 <= hour < 14:    # LUNCH - MID ACTIVITY
-        return [0.00, 0.68, 0.22, 0.02, 0.08]
-    elif 14 <= hour < 17:    # WORK
-        return [0.00, 0.87, 0.10, 0.01, 0.02]
-    elif 17 <= hour < 20:    # AFTER WORK - WORKOUT
-        return [0.00, 0.52, 0.24, 0.08, 0.16]
-    elif 20 <= hour < 22:    # EVENING
-        return [0.00, 0.75, 0.20, 0.02, 0.03]
-    else:                    # SLEEPING
-        return [0.55, 0.38, 0.06, 0.00, 0.01]
+
+
+_WEIGHTS: dict[ActivityProfile, list[list[float]]] = {
+    ActivityProfile.SEDENTARY: [
+        [0.95, 0.04, 0.01, 0.00, 0.00],  # 0-6
+        [0.05, 0.88, 0.06, 0.00, 0.01],  # 6-8
+        [0.00, 0.95, 0.04, 0.00, 0.01],  # 8-12
+        [0.00, 0.90, 0.07, 0.00, 0.03],  # 12-14
+        [0.00, 0.96, 0.03, 0.00, 0.01],  # 14-17
+        [0.00, 0.82, 0.12, 0.01, 0.05],  # 17-20
+        [0.00, 0.90, 0.08, 0.00, 0.02],  # 20-22
+        [0.55, 0.42, 0.03, 0.00, 0.00],  # 22-24
+    ],
+    ActivityProfile.NORMAL: [
+        [0.95, 0.04, 0.01, 0.00, 0.00],  # 0-6
+        [0.05, 0.68, 0.20, 0.04, 0.03],  # 6-8
+        [0.00, 0.83, 0.12, 0.01, 0.04],  # 8-12
+        [0.00, 0.68, 0.22, 0.02, 0.08],  # 12-14
+        [0.00, 0.87, 0.10, 0.01, 0.02],  # 14-17
+        [0.00, 0.52, 0.24, 0.08, 0.16],  # 17-20
+        [0.00, 0.75, 0.20, 0.02, 0.03],  # 20-22
+        [0.55, 0.38, 0.06, 0.00, 0.01],  # 22-24
+    ],
+    ActivityProfile.ACTIVE: [
+        [0.90, 0.08, 0.02, 0.00, 0.00],  # 0-6
+        [0.02, 0.45, 0.30, 0.15, 0.08],  # 6-8
+        [0.00, 0.72, 0.18, 0.03, 0.07],  # 8-12
+        [0.00, 0.52, 0.30, 0.05, 0.13],  # 12-14
+        [0.00, 0.75, 0.15, 0.03, 0.07],  # 14-17
+        [0.00, 0.30, 0.30, 0.15, 0.25],  # 17-20
+        [0.00, 0.62, 0.28, 0.05, 0.05],  # 20-22
+        [0.50, 0.42, 0.07, 0.00, 0.01],  # 22-24
+    ],
+}
+
+_HOUR_SLOTS = [6, 8, 12, 14, 17, 20, 22, 24]
+
+
+def _activity_weights_by_hour(hour: int, profile: ActivityProfile) -> list[float]:
+    slot = next((i for i, h in enumerate(_HOUR_SLOTS) if hour < h), len(_HOUR_SLOTS) - 1)
+    return _WEIGHTS[profile][slot]

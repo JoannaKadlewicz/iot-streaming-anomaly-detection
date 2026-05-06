@@ -33,7 +33,7 @@ def main() -> None:
 
     if settings.with_backfill:
         evt_cnt = generate_backfill(generators=all_generators, start=datetime(2026, 1, 1),
-                                    end=datetime.now() - timedelta(days=1), metric_producer=producer)
+                                    end=datetime.now(), metric_producer=producer)
         print(f"Backill finished. %d events sent to queue.", evt_cnt)
 
     logger.info("Streaming for %d generators and for %d devices just started...", len(all_generators), len(devices))

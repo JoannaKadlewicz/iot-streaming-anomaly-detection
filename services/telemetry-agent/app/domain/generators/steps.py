@@ -6,10 +6,10 @@ from domain.generators.context import ActivityLevel, MetricContext
 
 _STEPS_PER_MINUTE: dict[ActivityLevel, tuple[float, float]] = {
     ActivityLevel.SLEEPING: (0.0, 0.0),
-    ActivityLevel.RESTING: (0.0, 2.0),
-    ActivityLevel.WALKING: (80.0, 110.0),
-    ActivityLevel.RUNNING: (150.0, 180.0),
-    ActivityLevel.WORKOUT: (60.0, 130.0),
+    ActivityLevel.RESTING: (0.0, 1.0),
+    ActivityLevel.WALKING: (40.0, 80.0),
+    ActivityLevel.RUNNING: (120.0, 180.0),
+    ActivityLevel.WORKOUT: (20.0, 90.0)
 }
 
 
