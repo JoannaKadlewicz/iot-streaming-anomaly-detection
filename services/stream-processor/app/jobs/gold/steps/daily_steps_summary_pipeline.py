@@ -9,11 +9,11 @@ from infrastructure.config.layers import Layer
 logger = logging.getLogger(__name__)
 
 
-def run_hourly_temperature_summary(spark: SparkSession, settings: Settings) -> None:
+def run_daily_steps_summary(spark: SparkSession, settings: Settings) -> None:
     df_silver = (
         spark.readStream
         .format("delta")
-        .load(settings.delta_path(Layer.SILVER, "temperature"))
+        .load(settings.delta_path(Layer.SILVER, "steps"))
     )
 
     df_gold = (
@@ -22,28 +22,23 @@ def run_hourly_temperature_summary(spark: SparkSession, settings: Settings) -> N
         .groupBy(
             "account_id",
             "device_id",
-            F.window("event_ts", "60 minutes").alias("window")
+            F.window("event_ts", "1 day").alias("window")
         ).agg(
-            F.avg("temperature").alias("avg_temp"),
-            F.min("temperature").alias("min_temp"),
-            F.max("temperature").alias("max_temp"),
-            F.stddev("temperature").alias("stddev_temp"),
-            F.count("*").alias("event_count"),
+            F.sum("steps").alias("steps_count")
         )
         .withColumn("window_start", F.col("window.start"))
         .withColumn("window_end", F.col("window.end"))
         .drop("window")
-
     )
 
     query = (
         df_gold.writeStream
-        .queryName("gold_temperature_hourly")
+        .queryName(f"{Layer.GOLD}_steps_daily_summary")
         .format("delta")
         .outputMode("append")
-        .option("checkpointLocation", settings.checkpoint_path(Layer.GOLD, "temperature_hourly_summary"))
+        .option("checkpointLocation", settings.checkpoint_path(Layer.GOLD, "steps_daily_summary"))
         .trigger(availableNow=True)
-        .start(settings.delta_path(Layer.GOLD, "temperature_hourly_summary"))
+        .start(settings.delta_path(Layer.GOLD, "steps_daily_summary"))
     )
 
     query.awaitTermination()
