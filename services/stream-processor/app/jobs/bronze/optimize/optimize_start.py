@@ -23,6 +23,10 @@ def main():
         DeltaTable.forPath(spark, table).optimize().executeCompaction()
         logger.info("Done: %s", table)
 
+        spark.conf.set("spark.databricks.delta.retentionDurationCheck.enabled", "false")
+        DeltaTable.forPath(spark, table).vacuum(retentionHours=0)
+        logger.info("Done: %s", table)
+
 
 if __name__ == "__main__":
     main()
