@@ -1,32 +1,31 @@
 import logging
 
-import pyspark.sql.functions as F
 from pyspark.sql import SparkSession
 
-from domain.transformations.gold.steps import transform
+from domain.transformations.gold.heart_rate import transform
 from infrastructure.config import Settings
 from infrastructure.config.layers import Layer
 
 logger = logging.getLogger(__name__)
 
 
-def run_daily_steps_summary(spark: SparkSession, settings: Settings) -> None:
+def run_heart_rate_summary(spark: SparkSession, settings: Settings) -> None:
     df_silver = (
         spark.readStream
         .format("delta")
-        .load(settings.delta_path(Layer.SILVER, "steps"))
+        .load(settings.delta_path(Layer.SILVER, "heart_rate"))
     )
 
     df_gold = df_silver.transform(transform)
 
     query = (
         df_gold.writeStream
-        .queryName(f"{Layer.GOLD}_steps_daily_summary")
+        .queryName("gold_heart_rate_summary")
         .format("delta")
         .outputMode("append")
-        .option("checkpointLocation", settings.checkpoint_path(Layer.GOLD, "steps_daily_summary"))
+        .option("checkpointLocation", settings.checkpoint_path(Layer.GOLD, "heart_rate_summary"))
         .trigger(availableNow=True)
-        .start(settings.delta_path(Layer.GOLD, "steps_daily_summary"))
+        .start(settings.delta_path(Layer.GOLD, "heart_rate_summary"))
     )
 
     query.awaitTermination()

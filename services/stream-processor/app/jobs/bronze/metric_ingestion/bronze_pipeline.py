@@ -1,7 +1,7 @@
 from pyspark.sql import SparkSession, DataFrame
-from pyspark.sql.functions import current_timestamp
 from pyspark.sql.streaming import StreamingQuery
 
+from domain.transformations.bronze.metric_ingest import transform
 from infrastructure.config import Settings
 from infrastructure.config.layers import Layer
 
@@ -16,7 +16,7 @@ def run_bronze_ingestion(spark: SparkSession, settings: Settings) -> None:
         .load()
     )
 
-    df_transformed: DataFrame = df_raw.withColumn("ingested_at", current_timestamp())
+    df_transformed: DataFrame = transform(df_raw)
 
     query: StreamingQuery = (
         df_transformed.writeStream
