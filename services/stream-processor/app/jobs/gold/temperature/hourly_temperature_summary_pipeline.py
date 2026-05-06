@@ -17,7 +17,7 @@ def run_hourly_temperature_summary(spark: SparkSession, settings: Settings) -> N
         .load(settings.delta_path(Layer.SILVER, "temperature"))
     )
 
-    df_gold = df_silver.transform(transform)
+    df_gold = transform(df_silver)
 
     query = (
         df_gold.writeStream

@@ -3,7 +3,7 @@ import logging
 from infrastructure.config.logging import configure_logging
 from infrastructure.config.settings import get_settings
 from infrastructure.spark import create_spark_session
-from jobs.gold.heart_rate.heart_rate_summary_pipeline import run_heart_rate_summary
+from jobs.gold.alerts.collecting_anomalies_pipeline import run_collecting_anomalies
 
 logger = logging.getLogger(__name__)
 
@@ -13,13 +13,9 @@ def main() -> None:
     configure_logging(settings.log_level)
 
     spark = create_spark_session(settings)
+    logger.info("[GOLD] Starting collecting anomalies...")
 
-    logger.info("[GOLD] Starting heart rate summary...")
-
-    run_heart_rate_summary(spark, settings)
-
-    logger.info("[Gold] Heart rate summary finished.")
-
+    run_collecting_anomalies(spark, settings)
 
 if __name__ == "__main__":
     main()

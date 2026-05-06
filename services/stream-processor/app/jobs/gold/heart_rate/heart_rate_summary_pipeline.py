@@ -16,7 +16,7 @@ def run_heart_rate_summary(spark: SparkSession, settings: Settings) -> None:
         .load(settings.delta_path(Layer.SILVER, "heart_rate"))
     )
 
-    df_gold = df_silver.transform(transform)
+    df_gold = transform(df_silver)
 
     query = (
         df_gold.writeStream

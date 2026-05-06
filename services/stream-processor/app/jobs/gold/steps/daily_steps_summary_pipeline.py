@@ -1,6 +1,5 @@
 import logging
 
-import pyspark.sql.functions as F
 from pyspark.sql import SparkSession
 
 from domain.transformations.gold.steps import transform
@@ -17,7 +16,7 @@ def run_daily_steps_summary(spark: SparkSession, settings: Settings) -> None:
         .load(settings.delta_path(Layer.SILVER, "steps"))
     )
 
-    df_gold = df_silver.transform(transform)
+    df_gold = transform(df_silver)
 
     query = (
         df_gold.writeStream

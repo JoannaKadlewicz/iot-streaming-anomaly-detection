@@ -2,7 +2,7 @@ import logging
 
 from pyspark.sql import SparkSession
 
-from domain.transformations.gold.heart_rate import transform
+from domain.transformations.gold.blood_pressure import transform
 from infrastructure.config import Settings
 from infrastructure.config.layers import Layer
 
@@ -15,7 +15,7 @@ def run_blood_pressure_summary(spark: SparkSession, settings: Settings) -> None:
         .load(settings.delta_path(Layer.SILVER, "blood_pressure"))
     )
 
-    df_gold = df_silver.transform(transform)
+    df_gold = transform(df_silver)
 
     query = (
         df_gold.writeStream

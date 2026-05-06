@@ -3,7 +3,7 @@ import logging
 from infrastructure.config.logging import configure_logging
 from infrastructure.config.settings import get_settings
 from infrastructure.spark import create_spark_session
-from jobs.gold.steps.daily_steps_summary_pipeline import run_daily_steps_summary
+from jobs.gold.blood_pressure.blood_pressure_summary_pipeline import run_blood_pressure_summary
 
 logger = logging.getLogger(__name__)
 
@@ -14,11 +14,11 @@ def main() -> None:
 
     spark = create_spark_session(settings)
 
-    logger.info("[GOLD] Starting daily steps summary...")
+    logger.info("[GOLD] Starting blood pressure summary...")
 
-    run_daily_steps_summary(spark, settings)
+    run_blood_pressure_summary(spark, settings)
 
-    logger.info("[Gold] Daily steps summary finished.")
+    logger.info("[Gold] Blood pressure summary finished.")
 
 
 if __name__ == "__main__":

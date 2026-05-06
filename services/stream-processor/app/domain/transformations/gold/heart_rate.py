@@ -20,7 +20,7 @@ def _add_anomaly_flag(df: DataFrame) -> DataFrame:
 
     return (
         df
-        .withColumn("anomaly_flag", high_rate | low_rate | high_variability)
+        .withColumn("is_anomaly", high_rate | low_rate | high_variability)
         .withColumn(
             "anomaly_reason",
             F.when(high_rate, F.lit("high_rate"))
