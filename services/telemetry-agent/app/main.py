@@ -1,5 +1,5 @@
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from infrastructure.config.logging import configure_logging
 from infrastructure.config.settings import get_settings
