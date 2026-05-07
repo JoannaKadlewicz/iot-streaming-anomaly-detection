@@ -10,7 +10,6 @@ logger = logging.getLogger(__name__)
 
 
 def run_collecting_anomalies(spark: SparkSession, settings: Settings) -> None:
-    queries = []
 
     for metric, layer_name in [
         ("heart_rate", "heart_rate_summary"),
