@@ -30,6 +30,7 @@ def run_collecting_anomalies(spark: SparkSession, settings: Settings) -> None:
                 F.col("window_end"),
                 F.col("anomaly_reason"))
             .withColumn("alert_sent", F.lit(False))
+            .withColumn("anomaly_id", F.expr("uuid()"))
         )
 
         q = (

@@ -1,9 +1,11 @@
 from dataclasses import dataclass
 from datetime import datetime
+from uuid import UUID
 
 
-@dataclass(frozen=True)
+@dataclass
 class Anomaly:
+    anomaly_id: UUID
     account_id: int
     device_id: int
     metric: str
