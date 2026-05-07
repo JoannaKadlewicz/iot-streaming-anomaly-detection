@@ -18,6 +18,7 @@ class AnomalyReader:
 
         return [
             Anomaly(
+                anomaly_id=anomaly.anomaly_id,
                 account_id=anomaly.account_id,
                 device_id=anomaly.device_id,
                 metric=anomaly.metric,
