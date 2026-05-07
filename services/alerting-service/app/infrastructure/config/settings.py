@@ -11,6 +11,16 @@ class Settings(BaseSettings):
     smtp_port: int
     smtp_login: str
     smtp_password: str
+    smtp_from: str
+    smtp_to: str
+
+    # app
+    app_name: str
+    log_level: str
+
+    # spark
+    master_url: str
+    anomalies_delta_path: str
 
     model_config = SettingsConfigDict(
         env_file=ENV_FILE,

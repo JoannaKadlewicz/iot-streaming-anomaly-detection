@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+</head>
+
+<body style="margin:0;padding:0;background-color:#f4f6f8;font-family:Arial,Helvetica,sans-serif;">
+
+<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f6f8;padding:30px;">
+    <tr>
+        <td align="center">
+
+            <table width="600" cellpadding="0" cellspacing="0"
+                   style="background:white;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+
+                <!-- HEADER -->
+                <tr>
+                    <td style="background:#d32f2f;color:white;padding:20px;text-align:center;">
+                        <h2 style="margin:0;">🚨 Anomaly Detected</h2>
+                        <p style="margin:5px 0 0 0;font-size:14px;">
+                            Monitoring Alert System
+                        </p>
+                    </td>
+                </tr>
+
+                <!-- CONTENT -->
+                <tr>
+                    <td style="padding:25px;">
+
+                        <p style="font-size:16px;color:#333;">
+                            An anomaly has been detected in monitored metrics.
+                            Please review the details below.
+                        </p>
+
+                        <table width="100%" cellpadding="8" cellspacing="0"
+                               style="border-collapse:collapse;font-size:14px;">
+
+                            <tr style="background:#f1f3f5;">
+                                <td><b>Anomaly ID</b></td>
+                                <td>{{ anomaly_id }}</td>
+                            </tr>
+
+                            <tr>
+                                <td><b>Account ID</b></td>
+                                <td>{{ account_id }}</td>
+                            </tr>
+
+                            <tr style="background:#f1f3f5;">
+                                <td><b>Device ID</b></td>
+                                <td>{{ device_id }}</td>
+                            </tr>
+
+                            <tr>
+                                <td><b>Metric</b></td>
+                                <td>{{ metric }}</td>
+                            </tr>
+
+                            <tr style="background:#f1f3f5;">
+                                <td><b>Window Start</b></td>
+                                <td>{{ window_start }}</td>
+                            </tr>
+
+                            <tr>
+                                <td><b>Window End</b></td>
+                                <td>{{ window_end }}</td>
+                            </tr>
+
+                            <tr style="background:#fff3cd;">
+                                <td><b>Anomaly Reason</b></td>
+                                <td style="color:#b71c1c;"><b>{{ anomaly_reason }}</b></td>
+                            </tr>
+
+                        </table>
+
+                    </td>
+                </tr>
+
+                <!-- FOOTER -->
+                <tr>
+                    <td style="background:#fafafa;padding:15px;text-align:center;font-size:12px;color:#777;">
+                        Generated automatically • Do not reply
+                        <br>
+                        {{ generated_at }}
+                    </td>
+                </tr>
+
+            </table>
+
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

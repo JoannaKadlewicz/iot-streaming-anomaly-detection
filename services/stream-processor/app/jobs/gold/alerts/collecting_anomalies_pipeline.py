@@ -35,12 +35,12 @@ def run_collecting_anomalies(spark: SparkSession, settings: Settings) -> None:
 
         q = (
             df.writeStream
-            .queryName(f"alerting_{metric}")
+            .queryName(f"anomalies_{metric}")
             .format("delta")
             .outputMode("append")
-            .option("checkpointLocation", settings.checkpoint_path(Layer.GOLD, f"alerts_{metric}"))
+            .option("checkpointLocation", settings.checkpoint_path(Layer.GOLD, f"anomalies_{metric}"))
             .trigger(availableNow=True)
-            .start(settings.delta_path(Layer.GOLD, "alerts"))
+            .start(settings.delta_path(Layer.GOLD, "anomalies"))
         )
 
         q.awaitTermination()
