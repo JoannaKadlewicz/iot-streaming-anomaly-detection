@@ -3,7 +3,7 @@ import logging
 from infrastructure.config.logging import configure_logging
 from infrastructure.config.settings import get_settings
 from infrastructure.spark import create_spark_session
-from jobs.gold.alerts.collecting_anomalies_pipeline import run_collecting_anomalies
+from jobs.gold.anomalies.collecting_anomalies_pipeline import run_collecting_anomalies
 
 logger = logging.getLogger(__name__)
 

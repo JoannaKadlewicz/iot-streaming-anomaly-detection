@@ -1,18 +1,16 @@
 services:
 
-  telemetry_agent:
-    image: telemetry-agent:1.0.1
-    environment:
-      KAFKA_BOOTSTRAP_SERVER: broker:9092
-      KAFKA_TOPIC: metrics
-
-      DEVICE_SOURCE: ./resources/samples/devices.json
-      ECHO: False
-      LOG_LEVEL: INFO
-      WITH_BACKFILL: True
-
+  telemetry-agent:
+    container_name: telemetry-agent
+    command:
+      - python
+      - main.py
+    build: ./services/telemetry-agent
+    env_file:
+      - ./services/telemetry-agent/.env
     depends_on:
-      - kafka-broker
+      kafka-broker:
+        condition: service_healthy
 
   kafka-broker:
     image: apache/kafka:4.0.2
@@ -20,6 +18,12 @@ services:
     container_name: kafka
     ports:
       - 9092:9092
+    healthcheck:
+      test: ["CMD", "/opt/kafka/bin/kafka-broker-api-versions.sh", "--bootstrap-server", "broker:29092"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT,CONTROLLER:PLAINTEXT
@@ -36,3 +40,110 @@ services:
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
       CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
+
+  bronze-spark-metric-ingestion:
+    container_name: bronze-spark-metric-ingestion
+    build: ./services/stream-processor
+    command:
+      - python
+      - jobs/bronze/metric_ingestion/bronze_start.py
+    env_file:
+      - ./services/stream-processor/.env
+    depends_on:
+      - telemetry-agent
+    volumes:
+      - /tmp/delta:/tmp/iot-streaming/delta
+      - /tmp/checkpoints:/tmp/iot-streaming/checkpoint
+
+  silver-spark-metric-cleanup:
+    container_name: silver-spark-metric-cleanup
+    build: ./services/stream-processor
+    command:
+      - python
+      - jobs/silver/silver_start.py
+    env_file:
+      - ./services/stream-processor/.env
+    depends_on:
+      - bronze-spark-metric-ingestion
+    volumes:
+      - /tmp/delta:/tmp/iot-streaming/delta
+      - /tmp/checkpoints:/tmp/iot-streaming/checkpoint
+
+
+  gold-spark-hourly-temperature:
+    container_name: gold-spark-hourly-temperature
+    build: ./services/stream-processor
+    command:
+      - python
+      - jobs/gold/temperature/hourly_temperature_start.py
+    env_file:
+      - ./services/stream-processor/.env
+    profiles: ["manual"]
+    volumes:
+      - /tmp/delta:/tmp/iot-streaming/delta
+      - /tmp/checkpoints:/tmp/iot-streaming/checkpoint
+
+  gold-spark-daily-steps-summary:
+    container_name: gold-spark-daily-steps-summary
+    build: ./services/stream-processor
+    command:
+      - python
+      - jobs/gold/steps/daily_steps_start.py
+    env_file:
+      - ./services/stream-processor/.env
+    profiles: ["manual"]
+    volumes:
+      - /tmp/delta:/tmp/iot-streaming/delta
+      - /tmp/checkpoints:/tmp/iot-streaming/checkpoint
+
+  gold-spark-heart-rate-summary:
+    container_name: gold-spark-heart-rate-summary
+    build: ./services/stream-processor
+    command:
+      - python
+      - jobs/gold/heart_rate/heart_rate_summary_start.py
+    env_file:
+      - ./services/stream-processor/.env
+    profiles: ["manual"]
+    volumes:
+      - /tmp/delta:/tmp/iot-streaming/delta
+      - /tmp/checkpoints:/tmp/iot-streaming/checkpoint
+
+  gold-spark-blood-pressure-summary:
+    container_name: gold-spark-blood-pressure-summary
+    build: ./services/stream-processor
+    command:
+      - python
+      - jobs/gold/blood_pressure/blood_pressure_summary_start.py
+    env_file:
+      - ./services/stream-processor/.env
+    profiles: ["manual"]
+    volumes:
+      - /tmp/delta:/tmp/iot-streaming/delta
+      - /tmp/checkpoints:/tmp/iot-streaming/checkpoint
+
+  gold-spark-collecting-anomalies:
+    container_name: gold-spark-collecting-anomalies
+    build: ./services/stream-processor
+    command:
+      - python
+      - jobs/gold/anomalies/collecting_anomalies_start.py
+    env_file:
+      - ./services/stream-processor/.env
+    profiles: ["manual"]
+    volumes:
+      - /tmp/delta:/tmp/iot-streaming/delta
+      - /tmp/checkpoints:/tmp/iot-streaming/checkpoint
+
+  alerting-service:
+    container_name: alerting-service
+    build: ./services/alerting-service
+    command:
+      - python
+      - main.py
+    env_file:
+      - ./services/alerting-service/.env
+    profiles: ["manual"]
+    volumes:
+      - /tmp/delta:/tmp/iot-streaming/delta
+      - /tmp/checkpoints:/tmp/iot-streaming/checkpoint

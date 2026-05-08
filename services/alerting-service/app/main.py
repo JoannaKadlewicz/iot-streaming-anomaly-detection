@@ -17,7 +17,8 @@ def main():
         reader=AnomalyReader(spark, settings.anomalies_delta_path),
         writer=AnomalyStatusWriter(spark, settings.anomalies_delta_path),
         sender=EmailNotifier(settings),
-        recipient_email=settings.smtp_to)
+        recipient_email=settings.smtp_to,
+        dry_run=settings.dry_run)
 
     dispatcher.dispatch_all()
 

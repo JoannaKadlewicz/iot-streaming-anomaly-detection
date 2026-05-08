@@ -17,6 +17,7 @@ class Settings(BaseSettings):
     # app
     app_name: str
     log_level: str
+    dry_run: bool
 
     # spark
     master_url: str
