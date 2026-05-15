@@ -65,16 +65,16 @@ Data Warehouse (ACID transactions, schema enforcement, wydajne zapytania).
 
 ### Opis komponentów
 
-| Komponent                        | Technologia                | Rola                                                           |
-|----------------------------------|----------------------------|----------------------------------------------------------------|
-| **telemetry-agent**              | Python, kafka-producer     | Symulacja IoT eventów i publish do Kafki                       |
-| **kafka-broker**                 | Apache Kafka 4.0.2         | Message broker, partycjonowanie po `device_id`                 |
-| **`bronze`metric-ingestion-job** | Spark Structured Streaming | Bronze ingestion z Kafki do Delta Table                        |
-| **`bronze`optimize-job**         | Delta Table                | Kompakcja małych plików Parquet w `bronze` (OPTIMIZE + VACUUM) |
-| **`silver`metrics-cleanup-job**  | Spark `forEachBatch`       | Dystrybucja eventów z Bronze do Silver                         |
-| **`gold`aggregation jobs**       | Spark batch jobs           | Agregacje okienkowe + anomaly detection                        |
-| **`gold`anomaly-collector-job**  | Spark batch job            | Konsolidacja anomalii do `gold.anomalies`                      |
-| **alerting-service**             | Python, Delta table        | Odczyt anomalii i wysyłka alertów e-mail                       |
+| Komponent                        | Technologia                | Rola                                                          |
+|----------------------------------|----------------------------|---------------------------------------------------------------|
+| **telemetry-agent**              | Python, kafka-producer     | Symulacja IoT eventów i publish do Kafki                      |
+| **kafka-broker**                 | Apache Kafka 4.0.2         | Message broker, partycjonowanie po `device_id`                |
+| **`bronze`metric-ingestion-job** | Spark Structured Streaming | Bronze ingestion z Kafki do Delta Table                       |
+| **`bronze`optimize-job**         | Delta Table                | Scalanie małych plików Parquet w `bronze` (OPTIMIZE + VACUUM) |
+| **`silver`metrics-cleanup-job**  | Spark `forEachBatch`       | Dystrybucja eventów z Bronze do Silver                        |
+| **`gold`aggregation jobs**       | Spark batch jobs           | Agregacje okienkowe + anomaly detection                       |
+| **`gold`anomaly-collector-job**  | Spark batch job            | Konsolidacja anomalii do `gold.anomalies`                     |
+| **alerting-service**             | Python, Delta table        | Odczyt anomalii i wysyłka alertów e-mail                      |
 
 ## 3. Architektura Lakehouse
 
