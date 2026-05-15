@@ -58,9 +58,9 @@ Data Warehouse (ACID transactions, schema enforcement, wydajne zapytania).
 ---
 
 ## 2. Architektura rozwiązania
-
+<p align="center">
 <img src="docs/architecture.png" alt="architecture" style="width: 80%;" />
-
+</p>
 ### Opis komponentów
 
 | Komponent                        | Technologia                | Rola                                                           |
