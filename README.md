@@ -105,9 +105,12 @@ Warstwa Bronze implementuje wzorzec **multiplex ingestion** - wszystkie typy met
 Warstwa Silver realizuje wzorzec **fan-out** przy użyciu `forEachBatch` - pojedyncze odczytanie źródła i zapis do
 czterech dedykowanych tabel z metrykami.
 
+
 > **Dlaczego `forEachBatch` zamiast 4 osobnych zapytań?**  
 > Czytanie tego samego źródła 4 razy równolegle generuje 4x większe obciążenie I/O. `forEachBatch` odczytuje dane raz i
 > dystrybuuje do odpowiednich tabel - efektywniejsze i spójne w ramach jednego batcha.
+>
+
 
 | Tabela                  | Przykładowe transformacje           |
 |-------------------------|-------------------------------------|
