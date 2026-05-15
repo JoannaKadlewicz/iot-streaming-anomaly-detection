@@ -374,11 +374,12 @@ SMTP_TO=recipient@gmail.com
 ```bash
 # Uruchom infrastrukturę + streaming pipeline
 docker-compose up -d
+```
 
 ### Backfill - ładowanie danych historycznych
 ```bash
-# Ustaw WITH_BACKFILL=true w .env, następnie:
-docker-compose up telemetry-agent
+# WITH_BACKFILL=True w .env, następnie:
+docker-compose up -d telemetry-agent
 ```
 
 ### Uruchomienie gold jobs (manualnie z profilem `manual`)
@@ -394,25 +395,31 @@ docker-compose --profile manual up -d gold-spark-collecting-anomalies
 ### Uruchomienie alerting service
 
 ```bash
-# Dry run - alerty tylko na konsolę
+# DRY_RUN=True - alerty tylko na konsolę
 docker-compose --profile manual up -d alerting-service
+```
 
 ### Weryfikacja działania aplikacji
 
 ```bash
 # Logi telemetry-agent
 docker-compose logs -f telemetry-agent
+```
 
+```bash
 # Logi Bronze ingestion
 docker-compose logs -f bronze-spark-metric-ingestion
+```
 
+```bash
 # Status wszystkich kontenerów
 docker-compose ps
+```
 
+```bash
 # Listowanie plikow wynikowych parquet i checkpointow
 ls /tmp/delta/  
 ls /tmp/checkpoints/
-
 ```
 
 ---
