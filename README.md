@@ -123,12 +123,12 @@ czterech dedykowanych tabel z metrykami.
 
 Joby Gold są batchowe i obliczają agregaty okienkowe oraz wykrywają anomalie domenowe.
 
-| Job                       | Źródło                  | Okno    | Przykład anomalii                              |
-|---------------------------|-------------------------|---------|------------------------------------------------|
-| `temperature_analysis`    | `silver.temperature`    | 60 min  | temp < 35°C lub > 39.5°C                       |
-| `heart_rate_analysis`     | `silver.heart_rate`     | 10 min  | bpm < 40 (bradykardia) lub > 150 (tachykardia) |
-| `blood_pressure_analysis` | `silver.blood_pressure` | 15 min  | systolic > 180 mmHg                            |
-| `steps_analysis`          | `silver.steps`          | dzienny | zbyt mała aktywność przez cały < 5000          |
+| Job                                 | Źródło                  | Okno    | Przykład anomalii                              |
+|-------------------------------------|-------------------------|---------|------------------------------------------------|
+| `gold-spark-hourly-temperature`     | `silver.temperature`    | 60 min  | temp < 35°C lub > 39.5°C                       |
+| `gold-spark-heart-rate-summary`     | `silver.heart_rate`     | 10 min  | bpm < 40 (bradykardia) lub > 150 (tachykardia) |
+| `gold-spark-blood-pressure-summary` | `silver.blood_pressure` | 15 min  | systolic > 180 mmHg                            |
+| `gold-spark-daily-steps-summary`    | `silver.steps`          | dzienny | zbyt mała aktywność przez cały < 5000          |
 
 Tabela `gold.anomalies` agreguje wszystkie wykryte anomalie z wszystkich Gold summary tables:
 
@@ -377,6 +377,7 @@ docker-compose up -d
 ```
 
 ### Backfill - ładowanie danych historycznych
+
 ```bash
 # WITH_BACKFILL=True w .env, następnie:
 docker-compose up -d telemetry-agent
@@ -425,6 +426,7 @@ ls /tmp/checkpoints/
 ---
 
 ## Autor
+
 **Joanna Kadlewicz**  
 Studia Podyplomowe - WSB, Inżynieria Danych i Big Data  
 Rok akademicki 2025/2026
