@@ -59,7 +59,7 @@ Data Warehouse (ACID transactions, schema enforcement, wydajne zapytania).
 
 ## 2. Architektura rozwiązania
 
-<img src="docs/architecture.png" alt="architecture" style="width: 100%;" />
+<img src="docs/architecture.png" alt="architecture" style="width: 80%;" />
 
 ### Opis komponentów
 
@@ -84,7 +84,7 @@ Data Warehouse (ACID transactions, schema enforcement, wydajne zapytania).
 | **Silver** | Czyszczenie, walidacja, normalizacja   | Structured JSON per typ metryki          | Spark Structured Streaming, Delta Lake |
 | **Gold**   | Agregacje biznesowe, anomaly detection | Agregaty okienkowe + tabela anomalii     | Spark batch, Delta Lake                |
 
-<img src="docs/images/lakehouse.png" alt="lakehouse" style="width: 100%;" />
+<img src="docs/images/lakehouse.png" alt="lakehouse" style="width: 80%;" />
 
 ### Bronze - warstwa surowych danych
 
@@ -127,7 +127,7 @@ Joby Gold są batchowe i obliczają agregaty okienkowe oraz wykrywają anomalie 
 Tabela `gold.anomalies` agreguje wszystkie wykryte anomalie z wszystkich Gold summary tables:
 
 
-<img src="docs/images/gold-tables.png" alt="lakehouse" style="width: 100%;" /> 
+<img src="docs/images/gold-tables.png" alt="lakehouse" style="width: 80%;" /> 
 
 ## 3. Stack technologiczny
 
@@ -212,8 +212,8 @@ Serwis odczytujący `gold.anomalies` i wysyłający alerty e-mail z HTML templat
 
 **Przykładowy alert:**
 
-<img src="docs/images/alert-1.png" alt="alert-1" style="width: 100%;" />
-<img src="docs/images/alert-2.png" alt="alert-2" style="width: 100%;" /> 
+<img src="docs/images/alert-1.png" alt="alert-1" style="width: 80%;" />
+<img src="docs/images/alert-2.png" alt="alert-2" style="width: 80%;" /> 
 
 ---
 
