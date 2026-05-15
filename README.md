@@ -425,9 +425,7 @@ ls /tmp/checkpoints/
 ---
 
 ## Autor
-
-**Joanna Kadlewicz - PW33160**  
-Studia Podyplomowe - WSB, Inżynieria Danych i Big Data
+**Joanna Kadlewicz**  
+Studia Podyplomowe - WSB, Inżynieria Danych i Big Data  
 Rok akademicki 2025/2026
-
 ---
