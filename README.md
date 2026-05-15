@@ -58,6 +58,7 @@ Data Warehouse (ACID transactions, schema enforcement, wydajne zapytania).
 ---
 
 ## 2. Architektura rozwiązania
+
 <p align="center">
 <img src="docs/architecture.png" alt="architecture" style="width: 80%;" />
 </p>
@@ -110,7 +111,6 @@ czterech dedykowanych tabel z metrykami.
 > Czytanie tego samego źródła 4 razy równolegle generuje 4x większe obciążenie I/O. `forEachBatch` odczytuje dane raz i
 > dystrybuuje do odpowiednich tabel - efektywniejsze i spójne w ramach jednego batcha.
 >
-
 
 | Tabela                  | Przykładowe transformacje           |
 |-------------------------|-------------------------------------|
@@ -241,14 +241,14 @@ Serwis odczytujący `gold.anomalies` i wysyłający alerty e-mail z HTML templat
 
 ### Harmonogramy
 
-| Job                    | Tryb      | Częstotliwość        |
-|------------------------|-----------|----------------------|
-| `metric_ingestion`     | Streaming | 30s microbatch       |
-| `metrics_distribution` | Streaming | 60s microbatch       |
-| `optimize`             | Batch     | Ad-hoc               |
-| `*_analysis` (Gold)    | Batch     | Wg harmonogramu      |
-| `anomaly_collector`    | Batch     | Po Gold jobs         |
-| `alerting-service`     | Batch     | Po anomaly_collector |
+| Job                 | Tryb      | Rekomendowana częstotliwość |
+|---------------------|-----------|-----------------------------|
+| `bronze_ingestion`  | Streaming | 30s microbatch              |
+| `metrics_cleanup`   | Streaming | 60s microbatch              |
+| `optimize`          | Batch     | Manual ad-hoc               |
+| `gold_*_summary`    | Batch     | Wg harmonogramu             |
+| `anomaly_collector` | Batch     | Po gold jobs                |
+| `alerting-service`  | Batch     | Po anomaly_collector        |
 
 ### Transformacje i walidacje
 
@@ -376,13 +376,12 @@ SMTP_TO=recipient@gmail.com
 docker-compose up -d
 
 ### Backfill - ładowanie danych historycznych
-
 ```bash
 # Ustaw WITH_BACKFILL=true w .env, następnie:
 docker-compose up telemetry-agent
 ```
 
-### Uruchomienie Gold jobs (manualnie z profilem `manual`)
+### Uruchomienie gold jobs (manualnie z profilem `manual`)
 
 ```bash
 docker-compose --profile manual up -d gold-spark-hourly-temperature
@@ -396,9 +395,9 @@ docker-compose --profile manual up -d gold-spark-collecting-anomalies
 
 ```bash
 # Dry run - alerty tylko na konsolę
-docker-compose up alerting-service
+docker-compose --profile manual up -d alerting-service
 
-### Weryfikacja działania
+### Weryfikacja działania aplikacji
 
 ```bash
 # Logi telemetry-agent
